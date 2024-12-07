@@ -1,7 +1,3 @@
-<p align="center" width="100%">
-    <img height="100" src="https://github.com/said7388/developer-portfolio/assets/77630868/c0064908-cd5f-4751-a77c-eba90a62b55c">
-</p>
-
 ---
 
 # [Built Portfolio With GitHub ](https://github.com/said7388/github-portfolio)
@@ -18,7 +14,7 @@
 
 ![](./public/image/screen.png)
 
-## View live preview [here](https://abusaid.netlify.app/).
+## View live preview [here](https://diegoiglesiasdiaz.com/).
 
 ---
 
@@ -181,19 +177,6 @@ Whenever you push changes to your GitHub repo, Vercel will automatically redeplo
 5. Click on **App Passwords**. You may need to enter your Google account password again.
 6. In the **Select app** dropdown, choose "Mail", and for **Select device**, choose "Other (Custom name)" and name it appropriately (e.g., "Portfolio").
 7. Click **Generate**. A 16-character app password will be displayed. Save this password for later use in your environment variables (e.g., `GMAIL_PASSKEY`).
-
-## Create a Telegram Bot
-
-1. **Open Telegram** and search for the user **@BotFather**.
-2. Start a chat with BotFather and use the `/newbot` command to create a new bot.
-3. Choose a name for your bot.
-4. Set a unique username for your bot (must end with `bot`, e.g., `PortfolioAssistantBot`).
-5. Once your bot is created, BotFather will send you a **Token**. Save this token, as you will need it for your environment variables (e.g., `TELEGRAM_BOT_TOKEN`).
-6. To get your chat ID:
-   - Open your bot in Telegram and send it a message.
-   - Visit the following URL in your browser, replacing `BOT_TOKEN` with your actual bot token:  
-     `https://api.telegram.org/bot<BOT_TOKEN>/getUpdates`
-   - Look for the `chat` object in the response, which contains your **chat ID** (you can use this value for `TELEGRAM_CHAT_ID`).
 
 ## Fetching Blog from dev.to
 
