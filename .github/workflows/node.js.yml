@@ -1,7 +1,6 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code, run tests, and deploy the project across different versions of Node.js.
 
-name: Node.js CI
+name: Portfolio Deployment
 
 on:
   push:
@@ -28,5 +27,13 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+    # Uncomment if you have test scripts you want to run before deploying
     #- name: Run tests
-      #run: npm test
+    #  run: npm test
+
+    - name: Build project
+      run: npm run build # Assuming you have a build script in package.json
+
+    - name: Deploy project
+      run: npm run deploy # Assuming you have a deploy script set up in package.json
+      # Example: You can also deploy via SSH, AWS CLI, or any other deployment method
