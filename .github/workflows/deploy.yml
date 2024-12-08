@@ -47,18 +47,28 @@ jobs:
     - name: Build project
       run: npm run build
 
-    # Deploy to VPS via SCP
-    - name: Deploy to VPS
-      uses: appleboy/scp-action@v0.1.4
+    # Deploy to VPS via Git
+    - name: Deploy to VPS via Git
+      uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "./"
-        target: "/var/app/portfolio"
+        script: |
+          # Go to the project directory
+          cd /var/app/portfolio
 
-    # Restart the application on VPS using PM2
-    - name: Restart application via SSH
+          # If the directory is not a git repo, initialize it and add the remote
+          if [ ! -d ".git" ]; then
+            git init
+            git remote add origin https://github.com/${{ github.repository }}.git
+          fi
+
+          # Pull the latest code from GitHub
+          git pull origin main
+
+    # Install production dependencies and build the project on VPS
+    - name: Install production dependencies and build project
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.VPS_HOST }}
@@ -66,7 +76,25 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd /var/app/portfolio
-          npm install --omit=dev
-          pm2 restart portfolio || pm2 start npm --name "portfolio" -- run start
-          pm2 save
 
+          # Install production dependencies
+          npm install --omit=dev
+
+          # Build the project again (in case there were any new dependencies)
+          npm run build
+
+    # Restart the application using PM2
+    - name: Restart application using PM2
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /var/app/portfolio
+
+          # Restart the application using PM2
+          pm2 restart portfolio || pm2 start npm --name "portfolio" -- run start
+
+          # Save the PM2 process list to ensure it restarts after reboot
+          pm2 save
