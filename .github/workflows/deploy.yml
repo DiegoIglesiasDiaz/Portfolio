@@ -47,8 +47,8 @@ jobs:
     - name: Deploy to VPS via Git
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
+        host: ${{ env.VPS_HOST }}
+        username: ${{ env.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           # Go to the project directory
@@ -67,8 +67,8 @@ jobs:
     - name: Install production dependencies and build project
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
+        host: ${{ env.VPS_HOST }}
+        username: ${{ env.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd /var/app/portfolio
@@ -83,8 +83,8 @@ jobs:
     - name: Restart application using PM2
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
+        host: ${{ env.VPS_HOST }}
+        username: ${{ env.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd /var/app/portfolio
