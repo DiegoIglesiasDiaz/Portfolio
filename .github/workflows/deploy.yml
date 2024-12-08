@@ -1,0 +1,79 @@
+name: Portfolio Deployment
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Set up Node.js
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    # Install dependencies
+    - name: Install dependencies
+      run: npm ci
+
+    # Verify Node.js and npm versions
+    - name: Check Node.js and npm versions
+      run: |
+        node -v
+        npm -v
+
+    # Clean previous builds
+    - name: Clean previous builds
+      run: |
+        rm -rf .next
+        rm -rf node_modules
+
+    # Build the project
+    - name: Build project
+      run: npm run build
+
+    # Deploy to VPS via SCP
+    - name: Deploy to VPS
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "./"
+        target: "/var/app/portfolio"
+
+    # Restart the application on VPS using PM2
+    - name: Restart application via SSH
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /var/app/portfolio
+          npm install --omit=dev
+          pm2 restart portfolio || pm2 start npm --name "portfolio" -- run start
+          pm2 save
+
+    # Send Slack notification on failure (optional)
+    - name: Send Slack Notification on Failure
+      if: failure()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_MESSAGE: "🚨 Deployment to VPS failed!"
