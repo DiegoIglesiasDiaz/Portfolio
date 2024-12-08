@@ -44,13 +44,13 @@ jobs:
         rm -rf node_modules
     # Debug VPS_HOST value
     - name: Debug VPS_HOST
-      run: echo "VPS_HOST is ${{ env.VPS_HOST }}"
+      run: echo "VPS_HOST is ${{ vars.VPS_HOST }}"
     # Deploy to VPS via Git
     - name: Deploy to VPS via Git
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ env.VPS_HOST }}
-        username: ${{ env.VPS_USER }}
+        host: ${{ vars.VPS_HOST }}
+        username: ${{ vars.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           # Go to the project directory
@@ -69,8 +69,8 @@ jobs:
     - name: Install production dependencies and build project
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ env.VPS_HOST }}
-        username: ${{ env.VPS_USER }}
+        host: ${{ vars.VPS_HOST }}
+        username: ${{ vars.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd /var/app/portfolio
@@ -85,8 +85,8 @@ jobs:
     - name: Restart application using PM2
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ env.VPS_HOST }}
-        username: ${{ env.VPS_USER }}
+        host: ${{ vars.VPS_HOST }}
+        username: ${{ vars.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd /var/app/portfolio
