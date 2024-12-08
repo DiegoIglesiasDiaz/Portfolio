@@ -9,7 +9,7 @@ on:
 jobs:
   deploy:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     strategy:
       matrix:
@@ -70,10 +70,3 @@ jobs:
           pm2 restart portfolio || pm2 start npm --name "portfolio" -- run start
           pm2 save
 
-    # Send Slack notification on failure (optional)
-    - name: Send Slack Notification on Failure
-      if: failure()
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_MESSAGE: "🚨 Deployment to VPS failed!"
