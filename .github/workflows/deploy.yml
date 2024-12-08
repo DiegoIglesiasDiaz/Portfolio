@@ -43,10 +43,6 @@ jobs:
         rm -rf .next
         rm -rf node_modules
 
-    # Build the project
-    - name: Build project
-      run: npm run build
-
     # Deploy to VPS via Git
     - name: Deploy to VPS via Git
       uses: appleboy/ssh-action@v1.0.0
